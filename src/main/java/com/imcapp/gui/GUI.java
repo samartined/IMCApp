@@ -75,9 +75,9 @@ public class GUI extends JFrame {
                 verHistorial();
             }
         });
-
     }
 
+    // Método para calcular el IMC
     private void calcularIMC() {
         try {
             double peso = Double.parseDouble(txtPeso.getText());
@@ -99,11 +99,13 @@ public class GUI extends JFrame {
         }
     }
 
+    // Método para mostrar el resultado
     private void mostrarResultado(String estadoIMC, Color colorIMC) {
         lblResultado.setText(estadoIMC);
         lblResultado.setForeground(colorIMC);
     }
 
+    // Método para guardar los datos
     private void guardarDatos() {
         // Obtener los datos de los campos de texto
         String nombre = txtNombhre.getText();

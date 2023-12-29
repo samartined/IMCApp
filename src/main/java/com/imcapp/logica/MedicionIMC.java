@@ -1,6 +1,7 @@
 package com.imcapp.logica;
 
 public class MedicionIMC {
+    // Atributos
     private String nombre;
     private String edad;
     private double peso;
@@ -14,6 +15,7 @@ public class MedicionIMC {
         this.altura = altura;
     }
 
+    // Getters y setters
     public String getNombre() {
         return nombre;
     }
@@ -46,12 +48,13 @@ public class MedicionIMC {
         this.altura = altura;
     }
 
+    // Método para obtener el IMC
     public double getIMC() {
         return peso / (altura * altura);
     }
 
+    // Método para obtener el estado del IMC
     public String getEstadoIMC() {
         return Calculadora.determinarEstadoIMC(getIMC());
     }
-
 }
