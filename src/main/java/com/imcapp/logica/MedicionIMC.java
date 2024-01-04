@@ -53,6 +53,11 @@ public class MedicionIMC {
         return peso / (altura * altura);
     }
 
+    // Método para obtener el IMC redondeado a un decimal
+    public double getIMCRedondeado() {
+        return Math.round(getIMC() * 10) / 10.0;
+    }
+
     // Método para obtener el estado del IMC
     public String getEstadoIMC() {
         return Calculadora.determinarEstadoIMC(getIMC());

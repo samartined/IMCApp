@@ -37,15 +37,20 @@ public class HistorialFrame extends JFrame {
 
         // Agregar las filas
         for (MedicionIMC medicion : historial) {
+
+            // Redondear IMC a un decimal
+
             Object[] rowData = { // Crear un arreglo con los datos de la fila
+
                     medicion.getNombre(),
                     medicion.getEdad(),
                     medicion.getPeso(),
                     medicion.getAltura(),
-                    medicion.getIMC(),
+                    medicion.getIMCRedondeado(),
                     medicion.getEstadoIMC()
             };
             model.addRow(rowData); // Agregar la fila al modelo
         }
+        table.repaint(); // Repintar la tabla
     }
 }

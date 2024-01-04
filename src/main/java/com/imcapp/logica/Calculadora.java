@@ -1,10 +1,23 @@
 package com.imcapp.logica;
 
 import java.awt.Color;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Calculadora {
+public class Calculadora implements Serializable {
+
+    // Constantes
+    // Aviso: Este campo serialVersionUID se declara para garantizar la
+    // compatibilidad de la serialización
+    @SuppressWarnings("unused") // Suprimir advertencia de variable no utilizada
+    private static final long SERIAL_VERSION_UID = 1L; // Numero de version para la serializacion
+
     // Atributos
     private static List<MedicionIMC> historial = new ArrayList<>();
 
@@ -47,5 +60,27 @@ public class Calculadora {
     // Método para obtener el historial
     public static List<MedicionIMC> obtenerHistorial() {
         return historial;
+    }
+
+    // Método para guardar el historial en un archivo
+    public static void guardarHistorial() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("historial.dat"))) { // Crear el flujo
+                                                                                                       // de salida
+            oos.writeObject(historial); // Escribir el objeto en el flujo
+
+        } catch (IOException e) { // Manejamos IOException que es la excepción que puede lanzar FileOutputStream
+            e.printStackTrace();
+        }
+    }
+
+    // Método para cargar el historial desde un archivo
+    @SuppressWarnings("unchecked") // Suprimir advertencia de unchecked cast.
+    public static void cargarHistorial() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("historial.dat"))) {
+            historial = (List<MedicionIMC>) ois.readObject(); // Leer el objeto del flujo
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
