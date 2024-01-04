@@ -22,7 +22,8 @@ public class HistorialFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
 
         // Crear la tabla
-        String[] columnNames = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres de las columnas
+        String[] columnNames = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres de
+                                                                                                         // las columnas
         DefaultTableModel model = new DefaultTableModel(columnNames, 0); // Crear el modelo de la tabla
         table = new JTable(model); // Crear la tabla
 
@@ -52,6 +53,10 @@ public class HistorialFrame extends JFrame {
         cargarHistorial(historial); // Cargar el historial
     }
 
+    JTable obtenerTabla() {
+        return table;
+    }
+
     // Método para cargar el historial
     private void cargarHistorial(List<MedicionIMC> historial) {
         // Obtener el modelo de la tabla
@@ -76,4 +81,24 @@ public class HistorialFrame extends JFrame {
         table.setRowHeight(30); // Cambiar la altura de las filas
         table.repaint(); // Repintar la tabla
     }
+
+    // Método para actualizar el historial
+    public void actualizarHistorial(List<MedicionIMC> historial) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setRowCount(0); // Limpiar las filas existentes
+
+        for (MedicionIMC medicion : historial) {
+            Object[] rowData = {
+                    medicion.getNombre(),
+                    medicion.getEdad(),
+                    medicion.getPeso(),
+                    medicion.getAltura(),
+                    medicion.getIMCRedondeado(),
+                    medicion.getEstadoIMC()
+            };
+            model.addRow(rowData);
+        }
+        table.repaint(); // Repintar la tabla
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.imcapp.gui;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -13,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -20,97 +23,116 @@ import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
 
 public class GUI extends JFrame {
-    // Componentes de la interfaz
+
+    private static final String PANEL_PRINCIPAL = "panelPrincipal";
+    private static final String PANEL_HISTORIAL = "panelHistorial";
+
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
+
     private JTextField txtNombre, txtEdad, txtPeso, txtAltura;
     private JLabel lblResultado;
-    private JButton btnCalcular, btnGuardar, btnHistorial;
+    private JButton btnCalcular, btnGuardar, btnHistorial, btnVolver;
 
-    // Constructor
+    private HistorialFrame historialFrame;
+
     public GUI() {
-        // Configuración de la interfaz
         setTitle("Calculadora de IMC");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
-        setLayout(new GridLayout(7, 2, 10, 10));
-        getContentPane().setBackground(Color.WHITE); // Color de fondo
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        getContentPane().setBackground(Color.WHITE);
+        setLayout(new BorderLayout());
 
-        // Fuente para los componentes
-        Font labelFont = new Font("Arial", Font.BOLD, 20);
-        Font textFieldFont = new Font("Helvetica", Font.BOLD, 20);
+        // Inicializa los campos de texto aquí
+        txtNombre = new JTextField();
+        txtEdad = new JTextField();
+        txtPeso = new JTextField();
+        txtAltura = new JTextField();
 
-        // Crear y añadir los campos de texto para ingresar los datos
-        add(createLabeledTextField("Nombre:", labelFont, textFieldFont, "txtNombre"));
-        add(createLabeledTextField("Edad:", labelFont, textFieldFont, "txtEdad"));
-        add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont, "txtPeso"));
-        add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont, "txtAltura"));
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
 
-        // Crear los campos de texto para ingresar los datos
-        lblResultado = new JLabel("");
-        lblResultado.setFont(new Font("Arial", Font.BOLD, 20)); // Fuente para el resultado
-        lblResultado.setHorizontalAlignment(SwingConstants.CENTER); // Alinear el texto al centro
+        // Utilizamos métodos para separar responsabilidades
+        cardPanel.add(crearPanelPrincipal(), PANEL_PRINCIPAL);
+        cardPanel.add(crearPanelHistorial(), PANEL_HISTORIAL);
 
-        // Botón para calcular el IMC
-        btnCalcular = new StyledButton("Calcular IMC", new Color(0, 128, 0)); // Color verde
-        btnCalcular.addActionListener(e -> calcularIMC()); // Agregar el evento para calcular el IMC
+        add(cardPanel, BorderLayout.CENTER);
 
-        // Botón para guardar los datos
-        btnGuardar = new StyledButton("Guardar Datos", new Color(0, 0, 128)); // Color azul
-        btnGuardar.addActionListener(e -> guardarDatos()); // Agregar el evento para guardar los datos
-
-        // Botón para ver el historial
-        btnHistorial = new StyledButton("Ver Historial", new Color(64, 0, 64)); // Color morado
-        btnHistorial.addActionListener(e -> verHistorial()); // Agregar el evento para ver el historial
-
-        // Añadimos los campos de texto y los botones a la ventana en el orden deseado
-        add(btnCalcular);
-        add(lblResultado);
-        add(btnGuardar);
-        add(btnHistorial);
+        cardLayout.show(cardPanel, PANEL_PRINCIPAL);
     }
 
-    // Método para crear un campo de texto con etiqueta
-    private JPanel createLabeledTextField(String labelText, Font labelFont, Font textFieldFont, String fieldName) {
+    private JPanel crearPanelPrincipal() {
+        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+        panel.add(createLabeledTextField("Nombre:", txtNombre));
+        panel.add(createLabeledTextField("Edad:", txtEdad));
+        panel.add(createLabeledTextField("Peso (Kg):", txtPeso));
+        panel.add(createLabeledTextField("Altura (en metros):", txtAltura));
+
+        lblResultado = new JLabel("");
+        lblResultado.setFont(new Font("Arial", Font.BOLD, 20));
+        lblResultado.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(lblResultado);
+
+        // Botones para la vista principal
+        JPanel panelBotones = new JPanel();
+        btnCalcular = new StyledButton("Calcular IMC", new Color(0, 128, 0));
+        btnCalcular.addActionListener(e -> calcularIMC());
+        panelBotones.add(btnCalcular);
+
+        btnGuardar = new StyledButton("Guardar Datos", new Color(0, 0, 128));
+        btnGuardar.addActionListener(e -> guardarDatos());
+        panelBotones.add(btnGuardar);
+
+        btnHistorial = new StyledButton("Ver Historial", new Color(64, 0, 64));
+        btnHistorial.addActionListener(e -> mostrarVista(PANEL_HISTORIAL));
+        panelBotones.add(btnHistorial);
+
+        panel.add(panelBotones);
+        return panel;
+    }
+
+    private JPanel crearPanelHistorial() {
+        JPanel panel = new JPanel(new BorderLayout());
+
+        // Botón para volver a la vista principal desde el historial
+        btnVolver = new JButton("Volver");
+        btnVolver.addActionListener(e -> mostrarVista(PANEL_PRINCIPAL));
+        panel.add(btnVolver, BorderLayout.SOUTH);
+
+        historialFrame = new HistorialFrame(Calculadora.obtenerHistorial()); // Crear instancia de HistorialFrame
+
+        // Añade la instancia de HistorialFrame al panel con un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(historialFrame.obtenerTabla());
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    private void mostrarVista(String nombrePanel) {
+        cardLayout.show(cardPanel, nombrePanel);
+    }
+
+    private JPanel createLabeledTextField(String labelText, JTextField textField) {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 10, 0, 10); // Espacio a la izquierda y derecha del label
-        gbc.ipady = 10; // Altura adicional para centrar verticalmente
+        gbc.insets = new Insets(0, 10, 0, 10);
+        gbc.ipady = 10;
 
         JLabel label = new JLabel(labelText);
-        label.setFont(labelFont);
-
+        label.setFont(new Font("Arial", Font.BOLD, 20));
         panel.add(label, gbc);
 
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0; // Hace que el campo de texto ocupe todo el espacio horizontal disponible
+        gbc.weightx = 1.0;
 
-        JTextField textField = new JTextField();
-        textField.setFont(textFieldFont);
-        textField.setOpaque(false); // Hacer el fondo transparente
-        textField.setBorder(BorderFactory.createEmptyBorder()); // Eliminar el borde
-
+        textField.setFont(new Font("Helvetica", Font.BOLD, 20));
+        textField.setOpaque(false);
+        textField.setBorder(BorderFactory.createEmptyBorder());
         panel.add(textField, gbc);
-
-        // Asignar el JTextField a los campos de texto existentes
-        switch (fieldName) {
-            case "txtNombre":
-                txtNombre = textField;
-                break;
-            case "txtEdad":
-                txtEdad = textField;
-                break;
-            case "txtPeso":
-                txtPeso = textField;
-                break;
-            case "txtAltura":
-                txtAltura = textField;
-                break;
-            default:
-                break;
-        }
 
         return panel;
     }
