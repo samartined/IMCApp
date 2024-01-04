@@ -85,10 +85,11 @@ public class GUI extends JFrame {
             if (peso <= 0 || altura <= 0)
                 throw new ArithmeticException("Peso y altura deben ser mayores a cero.");
 
+            double imc = peso / (altura * altura);
             String estadoIMC = Calculadora.calcularIMC(peso, altura);
             Color colorIMC = Calculadora.determinarColorIMC(peso, altura);
 
-            mostrarResultado(estadoIMC, colorIMC);
+            mostrarResultado(estadoIMC, colorIMC, imc);
 
         } catch (NumberFormatException e) {
             lblResultado.setText("Error: Ingrese valores numéricos para peso y altura.");
@@ -100,8 +101,9 @@ public class GUI extends JFrame {
     }
 
     // Método para mostrar el resultado
-    private void mostrarResultado(String estadoIMC, Color colorIMC) {
-        lblResultado.setText(estadoIMC);
+    private void mostrarResultado(String estadoIMC, Color colorIMC, double imc) {
+        String mensaje = String.format("%s (IMC: %.1f)", estadoIMC, imc);
+        lblResultado.setText(mensaje);
         lblResultado.setForeground(colorIMC);
     }
 
