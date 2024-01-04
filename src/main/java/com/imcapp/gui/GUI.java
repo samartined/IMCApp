@@ -35,13 +35,14 @@ public class GUI extends JFrame {
         getContentPane().setBackground(Color.WHITE); // Color de fondo
 
         // Fuente para los componentes
-        Font labelFont = new Font("Arial", Font.PLAIN, 18);
-        Font textFieldFont = new Font("Helvetica", Font.BOLD, 16);
+        Font labelFont = new Font("Arial", Font.BOLD, 20);
+        Font textFieldFont = new Font("Helvetica", Font.BOLD, 20);
 
-        add(createLabeledTextField("Nombre:", labelFont, textFieldFont));
-        add(createLabeledTextField("Edad:", labelFont, textFieldFont));
-        add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont));
-        add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont));
+        // Crear y añadir los campos de texto para ingresar los datos
+        add(createLabeledTextField("Nombre:", labelFont, textFieldFont, "txtNombre"));
+        add(createLabeledTextField("Edad:", labelFont, textFieldFont, "txtEdad"));
+        add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont, "txtPeso"));
+        add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont, "txtAltura"));
 
         // Crear los campos de texto para ingresar los datos
         lblResultado = new JLabel("");
@@ -65,11 +66,10 @@ public class GUI extends JFrame {
         add(lblResultado);
         add(btnGuardar);
         add(btnHistorial);
-
     }
 
     // Método para crear un campo de texto con etiqueta
-    private JPanel createLabeledTextField(String labelText, Font labelFont, Font textFieldFont) {
+    private JPanel createLabeledTextField(String labelText, Font labelFont, Font textFieldFont, String fieldName) {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -94,12 +94,35 @@ public class GUI extends JFrame {
 
         panel.add(textField, gbc);
 
+        // Asignar el JTextField a los campos de texto existentes
+        switch (fieldName) {
+            case "txtNombre":
+                txtNombre = textField;
+                break;
+            case "txtEdad":
+                txtEdad = textField;
+                break;
+            case "txtPeso":
+                txtPeso = textField;
+                break;
+            case "txtAltura":
+                txtAltura = textField;
+                break;
+            default:
+                break;
+        }
+
         return panel;
     }
 
     // Método para calcular el IMC
     private void calcularIMC() {
         try {
+            // Asegúrate de que los campos de texto estén creados antes de acceder a ellos
+            if (txtPeso == null || txtAltura == null) {
+                throw new Exception("Los campos de texto no están inicializados.");
+            }
+
             double peso = Double.parseDouble(txtPeso.getText());
             double altura = Double.parseDouble(txtAltura.getText());
             if (peso <= 0 || altura <= 0)
