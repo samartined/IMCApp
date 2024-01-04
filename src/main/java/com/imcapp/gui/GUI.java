@@ -6,13 +6,11 @@ import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class GUI extends JFrame {
     // Componentes de la interfaz
-    private JTextField txtNombhre, txtEdad, txtPeso, txtAltura;
+    private JTextField txtNombre, txtEdad, txtPeso, txtAltura;
     private JLabel lblResultado;
     private JButton btnCalcular, btnGuardar, btnHistorial;
 
@@ -22,59 +20,58 @@ public class GUI extends JFrame {
         setTitle("Calculadora de IMC");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
-        setLayout(new GridLayout(7, 2));
+        setLayout(new GridLayout(7, 2, 10, 10));
+        getContentPane().setBackground(Color.WHITE); // Color de fondo
 
-        add(new JLabel("Nombre:"));
-        txtNombhre = new JTextField();
-        add(txtNombhre);
+        // Fuente para los componentes
+        Font font = new Font("Arial", Font.PLAIN, 18);
 
-        add(new JLabel("Edad:"));
-        txtEdad = new JTextField();
-        add(txtEdad);
+        // Crear los campos de texto
+        add(createLabeledTextField("Nombre:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
+        add(createLabeledTextField("Edad:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
+        add(createLabeledTextField("Peso:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
+        add(createLabeledTextField("Altura:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
 
-        add(new JLabel("Peso:"));
-        txtPeso = new JTextField();
-        add(txtPeso);
-
-        add(new JLabel("Altura:"));
-        txtAltura = new JTextField();
-        add(txtAltura);
-
+        // Crear los campos de texto para ingresar los datos
         lblResultado = new JLabel("");
-        add(lblResultado);
+        lblResultado.setFont(new Font("Arial", Font.BOLD, 20)); // Fuente para el resultado
+        lblResultado.setHorizontalAlignment(SwingConstants.CENTER); // Alinear el texto al centro
 
         // Botón para calcular el IMC
-        btnCalcular = new JButton("Calcular IMC");
-        add(btnCalcular);
-        // Agregar el evento al botón
-        btnCalcular.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                calcularIMC();
-            }
-        });
+        btnCalcular = new StyledButton("Calcular IMC", new Color(0, 128, 0)); // Color verde
+        btnCalcular.addActionListener(e -> calcularIMC()); // Agregar el evento para calcular el IMC
 
         // Botón para guardar los datos
-        btnGuardar = new JButton("Guardar Datos");
-        add(btnGuardar);
-        // Agregar el evento al botón
-        btnGuardar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                guardarDatos();
-            }
-        });
+        btnGuardar = new StyledButton("Guardar Datos", new Color(0, 0, 128)); // Color azul
+        btnGuardar.addActionListener(e -> guardarDatos()); // Agregar el evento para guardar los datos
 
         // Botón para ver el historial
-        btnHistorial = new JButton("Ver Historial");
+        btnHistorial = new StyledButton("Ver Historial", new Color(64, 0, 64)); // Color morado
+        btnHistorial.addActionListener(e -> verHistorial()); // Agregar el evento para ver el historial
+
+        // Añadimos los campos de texto y los botones a la ventana en el orden deseado
+        add(btnCalcular);
+        add(lblResultado);
+        add(btnGuardar);
         add(btnHistorial);
-        // Agregar el evento al botón
-        btnHistorial.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                verHistorial();
-            }
-        });
+
+    }
+
+    // Método para crear un campo de texto con etiqueta
+    private JPanel createLabeledTextField(String labelText, Font font, int labelHorizontalAlignment,
+            int textFieldHorizontalAlignment) {
+        JPanel panel = new JPanel(new BorderLayout());
+        JLabel label = new JLabel(labelText);
+        label.setFont(font);
+        JTextField textField = new JTextField();
+        textField.setFont(font);
+        textField.setOpaque(false); // Hacer el fondo transparente
+        textField.setBorder(BorderFactory.createEmptyBorder()); // Eliminar el borde
+        panel.add(label, BorderLayout.WEST);
+        panel.add(Box.createRigidArea(new Dimension(10, 0))); // Espacio adicional entre la etiqueta y el campo de texto
+        panel.add(textField, BorderLayout.CENTER);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Añadir espacio entre componentes
+        return panel;
     }
 
     // Método para calcular el IMC
@@ -110,7 +107,7 @@ public class GUI extends JFrame {
     // Método para guardar los datos
     private void guardarDatos() {
         // Obtener los datos de los campos de texto
-        String nombre = txtNombhre.getText();
+        String nombre = txtNombre.getText();
         String edad = txtEdad.getText();
 
         // Validar que los campos no estén vacíos
