@@ -1,6 +1,7 @@
 package com.imcapp.logica;
 
 import java.awt.Color;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -69,18 +70,21 @@ public class Calculadora implements Serializable {
             oos.writeObject(historial); // Escribir el objeto en el flujo
 
         } catch (IOException e) { // Manejamos IOException que es la excepción que puede lanzar FileOutputStream
-            e.printStackTrace();
+            System.out.println("Error al guardar el historial.");
         }
     }
 
     // Método para cargar el historial desde un archivo
     @SuppressWarnings("unchecked") // Suprimir advertencia de unchecked cast.
     public static void cargarHistorial() {
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("historial.dat"))) {
-            historial = (List<MedicionIMC>) ois.readObject(); // Leer el objeto del flujo
+        File file = new File("historial.dat"); // Crear el archivo
+        if (file.exists()) { // Verificar si el archivo existe
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("historial.dat"))) {
+                historial = (List<MedicionIMC>) ois.readObject(); // Leer el objeto del flujo
 
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

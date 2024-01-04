@@ -1,6 +1,8 @@
 package com.imcapp.logica;
 
-public class MedicionIMC {
+import java.io.Serializable;
+
+public class MedicionIMC implements Serializable {
     // Atributos
     private String nombre;
     private String edad;
