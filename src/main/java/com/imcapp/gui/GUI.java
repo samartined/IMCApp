@@ -1,12 +1,23 @@
 package com.imcapp.gui;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
-
-import java.awt.*;
-import java.util.List;
 
 public class GUI extends JFrame {
     // Componentes de la interfaz
@@ -24,13 +35,13 @@ public class GUI extends JFrame {
         getContentPane().setBackground(Color.WHITE); // Color de fondo
 
         // Fuente para los componentes
-        Font font = new Font("Arial", Font.PLAIN, 18);
+        Font labelFont = new Font("Arial", Font.PLAIN, 18);
+        Font textFieldFont = new Font("Helvetica", Font.BOLD, 16);
 
-        // Crear los campos de texto
-        add(createLabeledTextField("Nombre:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
-        add(createLabeledTextField("Edad:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
-        add(createLabeledTextField("Peso:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
-        add(createLabeledTextField("Altura:", font, SwingConstants.RIGHT, SwingConstants.LEFT));
+        add(createLabeledTextField("Nombre:", labelFont, textFieldFont));
+        add(createLabeledTextField("Edad:", labelFont, textFieldFont));
+        add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont));
+        add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont));
 
         // Crear los campos de texto para ingresar los datos
         lblResultado = new JLabel("");
@@ -58,19 +69,31 @@ public class GUI extends JFrame {
     }
 
     // Método para crear un campo de texto con etiqueta
-    private JPanel createLabeledTextField(String labelText, Font font, int labelHorizontalAlignment,
-            int textFieldHorizontalAlignment) {
-        JPanel panel = new JPanel(new BorderLayout());
+    private JPanel createLabeledTextField(String labelText, Font labelFont, Font textFieldFont) {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 10, 0, 10); // Espacio a la izquierda y derecha del label
+        gbc.ipady = 10; // Altura adicional para centrar verticalmente
+
         JLabel label = new JLabel(labelText);
-        label.setFont(font);
+        label.setFont(labelFont);
+
+        panel.add(label, gbc);
+
+        gbc.gridx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0; // Hace que el campo de texto ocupe todo el espacio horizontal disponible
+
         JTextField textField = new JTextField();
-        textField.setFont(font);
+        textField.setFont(textFieldFont);
         textField.setOpaque(false); // Hacer el fondo transparente
         textField.setBorder(BorderFactory.createEmptyBorder()); // Eliminar el borde
-        panel.add(label, BorderLayout.WEST);
-        panel.add(Box.createRigidArea(new Dimension(10, 0))); // Espacio adicional entre la etiqueta y el campo de texto
-        panel.add(textField, BorderLayout.CENTER);
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Añadir espacio entre componentes
+
+        panel.add(textField, gbc);
+
         return panel;
     }
 

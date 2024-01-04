@@ -1,11 +1,14 @@
 package com.imcapp.gui;
 
+import java.awt.Font;
 import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import com.imcapp.logica.MedicionIMC;
 
@@ -19,9 +22,28 @@ public class HistorialFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
 
         // Crear la tabla
-        String[] columnNames = { "Nombre", "Edad", "Peso", "Altura", "IMC", "Estado" }; // Nombres de las columnas
+        String[] columnNames = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres de las columnas
         DefaultTableModel model = new DefaultTableModel(columnNames, 0); // Crear el modelo de la tabla
         table = new JTable(model); // Crear la tabla
+
+        // Cambiar la fuente de los campos de texto
+        Font font = new Font("Arial", Font.PLAIN, 16); // Crear una nueva fuente
+        table.setFont(font); // Establecer la nueva fuente para la tabla
+
+        // Cambiar el tamaño de los títulos de las columnas
+        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
+
+        // Cambiar el ancho de las columnas
+        TableColumn column;
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            column = table.getColumnModel().getColumn(i);
+            column.setPreferredWidth(200); // Cambiar el ancho preferido de la columna
+        }
+
+        // Centrar el texto en las celdas
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
 
         // Agregar las filas
         JScrollPane scrollPane = new JScrollPane(table); // Crear el scroll pane
@@ -51,6 +73,7 @@ public class HistorialFrame extends JFrame {
             };
             model.addRow(rowData); // Agregar la fila al modelo
         }
+        table.setRowHeight(30); // Cambiar la altura de las filas
         table.repaint(); // Repintar la tabla
     }
 }
