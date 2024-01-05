@@ -1,20 +1,30 @@
 package com.imcapp.gui;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
 
 public class HistorialFrame extends JFrame {
     // Componentes de la interfaz
     private JTable table;
+    private JButton btnBorrarSeleccionados;
+    private JButton btnBorrarTodos;
+    private List<MedicionIMC> historialActualizado;
 
     // Constructor
     public HistorialFrame(List<MedicionIMC> historial) {
@@ -22,7 +32,8 @@ public class HistorialFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
 
         // Crear la tabla
-        String[] columnNames = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres de las columnas
+        String[] columnNames = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres de
+                                                                                                         // las columnas
         DefaultTableModel model = new DefaultTableModel(columnNames, 0); // Crear el modelo de la tabla
         table = new JTable(model); // Crear la tabla
 
@@ -49,6 +60,32 @@ public class HistorialFrame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table); // Crear el scroll pane
         add(scrollPane); // Agregar el scroll pane a la ventana
 
+        // Organizar la interfaz con BorderLayout
+        setLayout((new BorderLayout()));
+        add(scrollPane, BorderLayout.CENTER); // Agregar el scroll pane a la ventana (al panel
+
+        // Panel para los botones en la parte superior derecha
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+        buttonsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        btnBorrarSeleccionados = new JButton("Borrar Seleccionados");
+        btnBorrarSeleccionados.addActionListener(e -> {
+            borrarRegistrosSeleccionados();
+        });
+        buttonsPanel.add(btnBorrarSeleccionados); // Agregar el botón a la ventana (al panel)
+
+        btnBorrarTodos = new JButton("Borrar Todos");
+        btnBorrarTodos.addActionListener(e -> {
+            borrarTodosRegistros();
+        });
+        buttonsPanel.add(btnBorrarTodos); // Agregar el botón a la ventana (al panel)
+
+        add(buttonsPanel, BorderLayout.NORTH); // Agregar el panel de botones a la ventana (al panel)
+
+        // Guardar copia del historial original
+        historialActualizado = new ArrayList<>(historial);
+
         cargarHistorial(historial); // Cargar el historial
     }
 
@@ -73,7 +110,33 @@ public class HistorialFrame extends JFrame {
             };
             model.addRow(rowData); // Agregar la fila al modelo
         }
-        table.setRowHeight(30); // Cambiar la altura de las filas
-        table.repaint(); // Repintar la tabla
     }
+
+    private void borrarTodosRegistros() {
+        DefaultTableModel model = (DefaultTableModel) table.getModel(); // Obtener el modelo de la tabla
+        model.setRowCount(0); // Borrar todas las filas
+        historialActualizado.clear();
+    }
+
+    private void borrarRegistrosSeleccionados() {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        int[] selectedRows = table.getSelectedRows(); // Obtener las filas seleccionadas
+
+        if (selectedRows.length > 0) {
+            for (int i = selectedRows.length - 1; i >= 0; i--) {
+                model.removeRow(selectedRows[i]); // Borrar la fila
+
+                MedicionIMC medicion = historialActualizado.get(selectedRows[i]); // Obtener la medición
+
+                Calculadora.borrarMedicion(medicion);
+
+                historialActualizado.remove(selectedRows[i]); // Actualizar el historial
+            }
+        }
+    }
+
+    // Mantener este código para posible futura implementación
+    // private List<MedicionIMC> getHistorialActualizado() {
+    // return new ArrayList<>(historialActualizado);
+    // }
 }
