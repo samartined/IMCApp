@@ -16,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
@@ -140,8 +141,10 @@ public class GUI extends JFrame {
 
     private void mostrarResultado(String estadoIMC, Color colorIMC, double imc) {
         String mensaje = String.format("%s (IMC: %.1f)", estadoIMC, imc);
-        lblResultado.setText(mensaje);
-        lblResultado.setForeground(colorIMC);
+        SwingUtilities.invokeLater(() -> {
+            lblResultado.setText(mensaje);
+            lblResultado.setForeground(colorIMC);
+        });
     }
 
     private void guardarDatos() {
