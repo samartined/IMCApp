@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -24,8 +25,8 @@ import com.imcapp.logica.MedicionIMC;
 
 public class GUI extends JFrame {
 
-    private static final String PANEL_PRINCIPAL = "panelPrincipal";
-    private static final String PANEL_HISTORIAL = "panelHistorial";
+    public static final String PANEL_PRINCIPAL = "panelPrincipal";
+    public static final String PANEL_HISTORIAL = "panelHistorial";
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
@@ -43,7 +44,6 @@ public class GUI extends JFrame {
         getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout());
 
-        // Inicializa los campos de texto aquí
         txtNombre = new JTextField();
         txtEdad = new JTextField();
         txtPeso = new JTextField();
@@ -52,7 +52,6 @@ public class GUI extends JFrame {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Utilizamos métodos para separar responsabilidades
         cardPanel.add(crearPanelPrincipal(), PANEL_PRINCIPAL);
         cardPanel.add(crearPanelHistorial(), PANEL_HISTORIAL);
 
@@ -62,7 +61,8 @@ public class GUI extends JFrame {
     }
 
     private JPanel crearPanelPrincipal() {
-        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel panel = new JPanel(new GridLayout(5, 1, 10, 10));
+
         panel.add(createLabeledTextField("Nombre:", txtNombre));
         panel.add(createLabeledTextField("Edad:", txtEdad));
         panel.add(createLabeledTextField("Peso (Kg):", txtPeso));
@@ -73,68 +73,56 @@ public class GUI extends JFrame {
         lblResultado.setHorizontalAlignment(SwingConstants.CENTER);
         panel.add(lblResultado);
 
-        // Botones para la vista principal
-        JPanel panelBotones = new JPanel();
-        btnCalcular = new StyledButton("Calcular IMC", new Color(0, 128, 0));
-        btnCalcular.addActionListener(e -> calcularIMC());
-        panelBotones.add(btnCalcular);
+        panel.add(crearPanelBotones());
 
-        btnGuardar = new StyledButton("Guardar Datos", new Color(0, 0, 128));
-        btnGuardar.addActionListener(e -> guardarDatos());
-        panelBotones.add(btnGuardar);
-
-        btnHistorial = new StyledButton("Ver Historial", new Color(64, 0, 64));
-        btnHistorial.addActionListener(e -> mostrarVista(PANEL_HISTORIAL));
-        panelBotones.add(btnHistorial);
-
-        panel.add(panelBotones);
         return panel;
+    }
+
+    private JPanel createLabeledTextField(String labelText, JTextField textField) {
+        JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Arial", Font.BOLD, 20));
+        panel.add(label);
+
+        textField.setFont(new Font("Helvetica", Font.BOLD, 20));
+        textField.setOpaque(false);
+        panel.add(textField);
+
+        return panel;
+    }
+
+    private JPanel crearPanelBotones() {
+        JPanel panelBotones = new JPanel(new GridLayout(1, 3, 10, 10));
+
+        panelBotones.add(crearBoton("Calcular IMC", e -> calcularIMC(), new Color(0, 128, 0)));
+        panelBotones.add(crearBoton("Guardar Datos", e -> guardarDatos(), new Color(0, 0, 128)));
+        panelBotones.add(crearBoton("Ver Historial", e -> mostrarVista(PANEL_HISTORIAL), new Color(64, 0, 64)));
+
+        return panelBotones;
+    }
+
+    private JButton crearBoton(String texto, ActionListener actionListener, Color color) {
+        JButton boton = new JButton(texto);
+        boton.addActionListener(actionListener);
+        boton.setFont(new Font("Arial", Font.BOLD, 20));
+        boton.setBackground(color);
+        boton.setForeground(Color.WHITE);
+        return boton;
     }
 
     private JPanel crearPanelHistorial() {
         JPanel panel = new JPanel(new BorderLayout());
 
-        // Botón para volver a la vista principal desde el historial
-        btnVolver = new JButton("Volver");
-        btnVolver.addActionListener(e -> mostrarVista(PANEL_PRINCIPAL));
-        panel.add(btnVolver, BorderLayout.SOUTH);
+        panel.add(crearBoton("Volver", e -> mostrarVista(PANEL_PRINCIPAL), Color.GRAY), BorderLayout.SOUTH);
 
-        historialFrame = new HistorialFrame(Calculadora.obtenerHistorial()); // Crear instancia de HistorialFrame
-
-        // Añade la instancia de HistorialFrame al panel con un JScrollPane
-        JScrollPane scrollPane = new JScrollPane(historialFrame.obtenerTabla());
-        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(new JScrollPane(new HistorialFrame(Calculadora.obtenerHistorial()).obtenerTabla()), BorderLayout.CENTER);
 
         return panel;
     }
 
     private void mostrarVista(String nombrePanel) {
         cardLayout.show(cardPanel, nombrePanel);
-    }
-
-    private JPanel createLabeledTextField(String labelText, JTextField textField) {
-        JPanel panel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.insets = new Insets(0, 10, 0, 10);
-        gbc.ipady = 10;
-
-        JLabel label = new JLabel(labelText);
-        label.setFont(new Font("Arial", Font.BOLD, 20));
-        panel.add(label, gbc);
-
-        gbc.gridx = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-
-        textField.setFont(new Font("Helvetica", Font.BOLD, 20));
-        textField.setOpaque(false);
-        textField.setBorder(BorderFactory.createEmptyBorder());
-        panel.add(textField, gbc);
-
-        return panel;
     }
 
     // Método para calcular el IMC
@@ -194,15 +182,5 @@ public class GUI extends JFrame {
         } catch (NumberFormatException e) {
             lblResultado.setText("Error: Ingrese valores numéricos para peso y altura.");
         }
-    }
-
-    // Método para mostrar el historial
-    private void verHistorial() {
-        // Obtener el historial
-        List<MedicionIMC> historial = Calculadora.obtenerHistorial();
-        // Crear la ventana del historial
-        HistorialFrame historialFrame = new HistorialFrame(historial);
-        historialFrame.setLocationRelativeTo(null); // Centrar la ventana
-        historialFrame.setVisible(true); // Mostrar la ventana
     }
 }

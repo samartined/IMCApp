@@ -45,7 +45,6 @@ public class HistorialFrame extends JFrame {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
-
         // Agregar las filas
         JScrollPane scrollPane = new JScrollPane(table); // Crear el scroll pane
         add(scrollPane); // Agregar el scroll pane a la ventana
@@ -98,7 +97,6 @@ public class HistorialFrame extends JFrame {
             };
             model.addRow(rowData);
         }
-        table.repaint(); // Repintar la tabla
+        table.repaint();
     }
-
 }
