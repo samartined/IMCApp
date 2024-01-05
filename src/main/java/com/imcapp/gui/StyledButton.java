@@ -13,7 +13,8 @@ public class StyledButton extends JButton {
         super(text);
 
         // Establecer el estilo del botón
-        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2)); // Establecer el borde del botón con un grosor de 2
+        setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 2),
+                (BorderFactory.createEmptyBorder(5, 10, 5, 10)))); // Establecer el borde del botón con un grosor de 2
 
         setContentAreaFilled(false);
 

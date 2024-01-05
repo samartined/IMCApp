@@ -1,6 +1,7 @@
 package com.imcapp.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class HistorialFrame extends JFrame {
         table = new JTable(model); // Crear la tabla
 
         // Cambiar la fuente de los campos de texto
-        Font font = new Font("Arial", Font.PLAIN, 16); // Crear una nueva fuente
+        Font font = new Font("Arial", Font.PLAIN, 20); // Crear una nueva fuente
         table.setFont(font); // Establecer la nueva fuente para la tabla
 
         // Cambiar el tamaño de los títulos de las columnas
@@ -69,13 +70,13 @@ public class HistorialFrame extends JFrame {
 
         buttonsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        btnBorrarSeleccionados = new JButton("Borrar Seleccionados");
+        btnBorrarSeleccionados = new StyledButton("Borrar Seleccionados", new Color(77, 77, 77));
         btnBorrarSeleccionados.addActionListener(e -> {
             borrarRegistrosSeleccionados();
         });
         buttonsPanel.add(btnBorrarSeleccionados); // Agregar el botón a la ventana (al panel)
 
-        btnBorrarTodos = new JButton("Borrar Todos");
+        btnBorrarTodos = new StyledButton("Borrar Todos", new Color(204, 0, 0));
         btnBorrarTodos.addActionListener(e -> {
             borrarTodosRegistros();
         });
