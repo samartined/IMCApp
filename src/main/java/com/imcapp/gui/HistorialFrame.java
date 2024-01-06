@@ -22,7 +22,7 @@ import com.imcapp.logica.MedicionIMC;
 
 public class HistorialFrame extends JFrame {
     // Componentes de la interfaz
-    private JTable table;
+    private JTable tabla;
     private JButton btnBorrarSeleccionados;
     private JButton btnBorrarTodos;
     private List<MedicionIMC> historialActualizado;
@@ -33,56 +33,57 @@ public class HistorialFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
 
         // Crear la tabla
-        String[] columnNames = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres de
-                                                                                                         // las columnas
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0); // Crear el modelo de la tabla
-        table = new JTable(model); // Crear la tabla
+        String[] nombresColumnas = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres
+                                                                                                             // de
+        // las columnas
+        DefaultTableModel modelo = new DefaultTableModel(nombresColumnas, 0); // Crear el modelo de la tabla
+        tabla = new JTable(modelo); // Crear la tabla
 
         // Cambiar la fuente de los campos de texto
-        Font font = new Font("Arial", Font.PLAIN, 20); // Crear una nueva fuente
-        table.setFont(font); // Establecer la nueva fuente para la tabla
+        Font fuente = new Font("Arial", Font.PLAIN, 20); // Crear una nueva fuente
+        tabla.setFont(fuente); // Establecer la nueva fuente para la tabla
 
         // Cambiar el tamaño de los títulos de las columnas
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
+        tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 18));
 
         // Cambiar el ancho de las columnas
-        TableColumn column;
-        for (int i = 0; i < table.getColumnCount(); i++) {
-            column = table.getColumnModel().getColumn(i);
-            column.setPreferredWidth(200); // Cambiar el ancho preferido de la columna
+        TableColumn columna;
+        for (int i = 0; i < tabla.getColumnCount(); i++) {
+            columna = tabla.getColumnModel().getColumn(i);
+            columna.setPreferredWidth(200); // Cambiar el ancho preferido de la columna
         }
 
         // Centrar el texto en las celdas
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
-        table.setDefaultRenderer(Object.class, centerRenderer);
+        DefaultTableCellRenderer centroRender = new DefaultTableCellRenderer();
+        centroRender.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        tabla.setDefaultRenderer(Object.class, centroRender);
 
         // Agregar las filas
-        JScrollPane scrollPane = new JScrollPane(table); // Crear el scroll pane
-        add(scrollPane); // Agregar el scroll pane a la ventana
+        JScrollPane scrollPanel = new JScrollPane(tabla); // Crear el scroll pane
+        add(scrollPanel); // Agregar el scroll pane a la ventana
 
         // Organizar la interfaz con BorderLayout
         setLayout((new BorderLayout()));
-        add(scrollPane, BorderLayout.CENTER); // Agregar el scroll pane a la ventana (al panel
+        add(scrollPanel, BorderLayout.CENTER); // Agregar el scroll pane a la ventana (al panel
 
         // Panel para los botones en la parte superior derecha
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        buttonsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        panelBotones.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         btnBorrarSeleccionados = new StyledButton("Borrar Seleccionados", new Color(77, 77, 77));
         btnBorrarSeleccionados.addActionListener(e -> {
             borrarRegistrosSeleccionados();
         });
-        buttonsPanel.add(btnBorrarSeleccionados); // Agregar el botón a la ventana (al panel)
+        panelBotones.add(btnBorrarSeleccionados); // Agregar el botón a la ventana (al panel)
 
         btnBorrarTodos = new StyledButton("Borrar Todos", new Color(204, 0, 0));
         btnBorrarTodos.addActionListener(e -> {
             borrarTodosRegistros();
         });
-        buttonsPanel.add(btnBorrarTodos); // Agregar el botón a la ventana (al panel)
+        panelBotones.add(btnBorrarTodos); // Agregar el botón a la ventana (al panel)
 
-        add(buttonsPanel, BorderLayout.NORTH); // Agregar el panel de botones a la ventana (al panel)
+        add(panelBotones, BorderLayout.NORTH); // Agregar el panel de botones a la ventana (al panel)
 
         // Guardar copia del historial original
         historialActualizado = new ArrayList<>(historial);
@@ -93,14 +94,14 @@ public class HistorialFrame extends JFrame {
     // Método para cargar el historial
     private void cargarHistorial(List<MedicionIMC> historial) {
         // Obtener el modelo de la tabla
-        DefaultTableModel model = (DefaultTableModel) table.getModel(); // Obtener el modelo de la tabla
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel(); // Obtener el modelo de la tabla
 
         // Agregar las filas
         for (MedicionIMC medicion : historial) {
 
             // Redondear IMC a un decimal
 
-            Object[] rowData = { // Crear un arreglo con los datos de la fila
+            Object[] datosFila = { // Crear un arregwlo con los datos de la fila
 
                     medicion.getNombre(),
                     medicion.getEdad(),
@@ -109,29 +110,36 @@ public class HistorialFrame extends JFrame {
                     medicion.getIMCRedondeado(),
                     medicion.getEstadoIMC()
             };
-            model.addRow(rowData); // Agregar la fila al modelo
+            modelo.addRow(datosFila); // Agregar la fila al modelo
+
+            // Cambiar el alto de las filas
+            for (int i = 0; i < tabla.getRowCount(); i++) {
+                tabla.setRowHeight(i, 70);
+            }
         }
+        // Cambiar el espaciado entre las celdas
+        tabla.setIntercellSpacing(new java.awt.Dimension(2, 0));
     }
 
     private void borrarTodosRegistros() {
-        DefaultTableModel model = (DefaultTableModel) table.getModel(); // Obtener el modelo de la tabla
-        model.setRowCount(0); // Borrar todas las filas
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel(); // Obtener el modelo de la tabla
+        modelo.setRowCount(0); // Borrar todas las filas
         historialActualizado.clear();
     }
 
     private void borrarRegistrosSeleccionados() {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        int[] selectedRows = table.getSelectedRows(); // Obtener las filas seleccionadas
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        int[] filasSeleccionadas = tabla.getSelectedRows(); // Obtener las filas seleccionadas
 
-        if (selectedRows.length > 0) {
-            for (int i = selectedRows.length - 1; i >= 0; i--) {
-                model.removeRow(selectedRows[i]); // Borrar la fila
+        if (filasSeleccionadas.length > 0) {
+            for (int i = filasSeleccionadas.length - 1; i >= 0; i--) {
+                modelo.removeRow(filasSeleccionadas[i]); // Borrar la fila
 
-                MedicionIMC medicion = historialActualizado.get(selectedRows[i]); // Obtener la medición
+                MedicionIMC medicion = historialActualizado.get(filasSeleccionadas[i]); // Obtener la medición
 
                 Calculadora.borrarMedicion(medicion);
 
-                historialActualizado.remove(selectedRows[i]); // Actualizar el historial
+                historialActualizado.remove(filasSeleccionadas[i]); // Actualizar el historial
             }
         }
     }
