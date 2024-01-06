@@ -48,7 +48,7 @@ public class Calculadora implements Serializable {
         } else if (imc < 24.9) {
             return Color.GREEN;
         } else {
-            return Color.YELLOW;
+            return new Color(255, 165, 0);
         }
     }
 

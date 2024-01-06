@@ -1,4 +1,4 @@
-package com.imcapp.gui;
+package com.imcapp.gui.historialgui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.imcapp.gui.StyledButton;
 import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
 
@@ -26,6 +27,7 @@ public class HistorialFrame extends JFrame {
     private JButton btnBorrarSeleccionados;
     private JButton btnBorrarTodos;
     private List<MedicionIMC> historialActualizado;
+    private ModeloTablaSeleccionable modeloTabla;
 
     // Constructor
     public HistorialFrame(List<MedicionIMC> historial) {
@@ -33,11 +35,10 @@ public class HistorialFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Abre la ventana en tamaño completo
 
         // Crear la tabla
-        String[] nombresColumnas = { "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC", "Estado" }; // Nombres
-                                                                                                             // de
-        // las columnas
-        DefaultTableModel modelo = new DefaultTableModel(nombresColumnas, 0); // Crear el modelo de la tabla
-        tabla = new JTable(modelo); // Crear la tabla
+        String[] nombresColumnas = { "Seleccionar", "Nombre", "Edad", "Peso (kg)", "Altura (en metros)", "IMC",
+                "Estado" };
+        modeloTabla = new ModeloTablaSeleccionable(new Object[][] {}, nombresColumnas);
+        tabla = new JTable(modeloTabla); // Crear la tabla
 
         // Cambiar la fuente de los campos de texto
         Font fuente = new Font("Arial", Font.PLAIN, 20); // Crear una nueva fuente
@@ -57,6 +58,10 @@ public class HistorialFrame extends JFrame {
         DefaultTableCellRenderer centroRender = new DefaultTableCellRenderer();
         centroRender.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         tabla.setDefaultRenderer(Object.class, centroRender);
+        tabla.getColumnModel().getColumn(1).setCellRenderer(centroRender);
+        tabla.getColumnModel().getColumn(2).setCellRenderer(centroRender);
+        tabla.getColumnModel().getColumn(3).setCellRenderer(centroRender);
+        tabla.getColumnModel().getColumn(4).setCellRenderer(centroRender);
 
         // Agregar las filas
         JScrollPane scrollPanel = new JScrollPane(tabla); // Crear el scroll pane
@@ -93,16 +98,14 @@ public class HistorialFrame extends JFrame {
 
     // Método para cargar el historial
     private void cargarHistorial(List<MedicionIMC> historial) {
-        // Obtener el modelo de la tabla
-        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel(); // Obtener el modelo de la tabla
+        // Borrar las filas para evitar duplicados
+        modeloTabla.setRowCount(0);
 
         // Agregar las filas
         for (MedicionIMC medicion : historial) {
 
-            // Redondear IMC a un decimal
-
             Object[] datosFila = { // Crear un arregwlo con los datos de la fila
-
+                    false, // Checkbox
                     medicion.getNombre(),
                     medicion.getEdad(),
                     medicion.getPeso(),
@@ -110,13 +113,14 @@ public class HistorialFrame extends JFrame {
                     medicion.getIMCRedondeado(),
                     medicion.getEstadoIMC()
             };
-            modelo.addRow(datosFila); // Agregar la fila al modelo
-
-            // Cambiar el alto de las filas
-            for (int i = 0; i < tabla.getRowCount(); i++) {
-                tabla.setRowHeight(i, 70);
-            }
+            modeloTabla.addRow(datosFila); // Agregar la fila al modelo
         }
+
+        // Cambiar el alto de las filas
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            tabla.setRowHeight(i, 70);
+        }
+
         // Cambiar el espaciado entre las celdas
         tabla.setIntercellSpacing(new java.awt.Dimension(2, 0));
     }
@@ -128,18 +132,16 @@ public class HistorialFrame extends JFrame {
     }
 
     private void borrarRegistrosSeleccionados() {
-        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        int[] filasSeleccionadas = tabla.getSelectedRows(); // Obtener las filas seleccionadas
+        int conteoFilas = modeloTabla.getRowCount(); // Obtener el número de filas
 
-        if (filasSeleccionadas.length > 0) {
-            for (int i = filasSeleccionadas.length - 1; i >= 0; i--) {
-                modelo.removeRow(filasSeleccionadas[i]); // Borrar la fila
+        for (int i = conteoFilas - 1; i >= 0; i--) {
+            Boolean seleccionado = (Boolean) modeloTabla.getValueAt(i, 0);
 
-                MedicionIMC medicion = historialActualizado.get(filasSeleccionadas[i]); // Obtener la medición
-
+            if (seleccionado) {
+                modeloTabla.removeRow(i);
+                MedicionIMC medicion = historialActualizado.get(i);
                 Calculadora.borrarMedicion(medicion);
-
-                historialActualizado.remove(filasSeleccionadas[i]); // Actualizar el historial
+                historialActualizado.remove(i);
             }
         }
     }
