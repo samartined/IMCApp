@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import com.imcapp.gui.historialgui.HistorialFrame;
 import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
 
@@ -100,7 +101,7 @@ public class GUI extends JFrame {
 
     private JLabel createResultLabel() {
         JLabel resultLabel = new JLabel("");
-        resultLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        resultLabel.setFont(new Font("Helvetica", Font.BOLD, 24));
         resultLabel.setHorizontalAlignment(SwingConstants.CENTER);
         return resultLabel;
     }

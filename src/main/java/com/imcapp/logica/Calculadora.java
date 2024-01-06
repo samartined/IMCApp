@@ -48,7 +48,7 @@ public class Calculadora implements Serializable {
         } else if (imc < 24.9) {
             return Color.GREEN;
         } else {
-            return Color.YELLOW;
+            return new Color(255, 165, 0);
         }
     }
 
@@ -56,6 +56,13 @@ public class Calculadora implements Serializable {
     public static void guardarMedicion(String nombre, String edad, double peso, double altura) {
         MedicionIMC medicion = new MedicionIMC(nombre, edad, peso, altura);
         historial.add(medicion);
+        guardarHistorial(); // Guardar el historial en un archivo
+    }
+
+    // Método para borrar una medición
+    public static void borrarMedicion(MedicionIMC medicion) {
+        historial.remove(medicion);
+        guardarHistorial(); // Guardar el historial en un archivo
     }
 
     // Método para obtener el historial
@@ -65,11 +72,11 @@ public class Calculadora implements Serializable {
 
     // Método para guardar el historial en un archivo
     public static void guardarHistorial() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("historial.dat"))) { // Crear el flujo
-                                                                                                       // de salida
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("historial.dat"))) {
             oos.writeObject(historial); // Escribir el objeto en el flujo
 
         } catch (IOException e) { // Manejamos IOException que es la excepción que puede lanzar FileOutputStream
+            e.printStackTrace();
             System.out.println("Error al guardar el historial.");
         }
     }
