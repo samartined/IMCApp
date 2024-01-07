@@ -1,4 +1,4 @@
-package com.imcapp.gui;
+package com.imcapp.gui.guiprincipal;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -18,14 +18,19 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import com.imcapp.gui.StyledButton;
 import com.imcapp.gui.historialgui.HistorialFrame;
 import com.imcapp.logica.Calculadora;
 import com.imcapp.logica.MedicionIMC;
 
 public class GUI extends JFrame {
-    private JTextField txtNombre, txtEdad, txtPeso, txtAltura;
+    private JTextField txtNombre, txtEdad;
+    JTextField txtPeso;
+    JTextField txtAltura;
     private JLabel lblResultado;
     private JButton btnCalcular, btnGuardar, btnHistorial;
+    private JPanel panelGrafico;
+    private GraficoComparativo graficoComparativo;
 
     public GUI() {
         setTitle("Calculadora de IMC");
@@ -52,6 +57,12 @@ public class GUI extends JFrame {
         add(lblResultado);
         add(btnGuardar);
         add(btnHistorial);
+
+        panelGrafico = new JPanel();
+        add(panelGrafico);
+        graficoComparativo = new GraficoComparativo(this);
+        graficoComparativo.setVisible(false);
+
     }
 
     private JPanel createLabeledTextField(String labelText, Font labelFont, Font textFieldFont, String fieldName) {
@@ -131,6 +142,8 @@ public class GUI extends JFrame {
 
             mostrarResultado(estadoIMC, colorIMC, imc);
 
+            verGrafico();
+
         } catch (NumberFormatException e) {
             lblResultado.setText("Error: Ingrese valores numéricos para peso y altura.");
         } catch (ArithmeticException e) {
@@ -138,6 +151,21 @@ public class GUI extends JFrame {
         } catch (Exception e) {
             lblResultado.setText("Error: " + e.getMessage());
         }
+    }
+
+    private void verGrafico() {
+        // Obtener el historial de mediciones
+        List<MedicionIMC> historial = Calculadora.obtenerHistorial();
+
+        // Actualizar el historial y recalcular el gráfico
+        graficoComparativo.actualizarHistorial(historial);
+
+        // Mostrar u ocultar el gráfico según sea necesario
+        graficoComparativo.setVisible(!graficoComparativo.isVisible());
+
+        // Actualizar la GUI
+        this.revalidate();
+        this.repaint();
     }
 
     private void mostrarResultado(String estadoIMC, Color colorIMC, double imc) {
@@ -169,5 +197,24 @@ public class GUI extends JFrame {
         HistorialFrame historialFrame = new HistorialFrame(historial);
         historialFrame.setLocationRelativeTo(null);
         historialFrame.setVisible(true);
+    }
+
+    double getTxtPesoValue() {
+        try {
+            return Double.parseDouble(txtPeso.getText());
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0.0;
+        }
+    }
+
+    public double getTxtAlturaValue() {
+        try {
+            return Double.parseDouble(txtAltura.getText());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0.0; // Valor predeterminado si hay un error
+        }
     }
 }

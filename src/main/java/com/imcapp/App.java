@@ -5,7 +5,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.SwingUtilities;
 
-import com.imcapp.gui.GUI;
+import com.imcapp.gui.guiprincipal.GUI;
 import com.imcapp.logica.Calculadora;
 
 public class App {
