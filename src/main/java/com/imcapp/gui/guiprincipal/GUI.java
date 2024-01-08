@@ -1,5 +1,6 @@
 package com.imcapp.gui.guiprincipal;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -36,32 +37,40 @@ public class GUI extends JFrame {
         setTitle("Calculadora de IMC");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLayout(new GridLayout(7, 2, 10, 10));
+        setLayout(new BorderLayout());
+
+        JPanel datosPanel = new JPanel(new GridLayout(4, 2, 10, 10));
+
         getContentPane().setBackground(Color.WHITE);
 
         Font labelFont = new Font("Arial", Font.BOLD, 20);
         Font textFieldFont = new Font("Helvetica", Font.BOLD, 20);
 
-        add(createLabeledTextField("Nombre:", labelFont, textFieldFont, "txtNombre"));
-        add(createLabeledTextField("Edad:", labelFont, textFieldFont, "txtEdad"));
-        add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont, "txtPeso"));
-        add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont, "txtAltura"));
+        datosPanel.add(createLabeledTextField("Nombre:", labelFont, textFieldFont, "txtNombre"));
+        datosPanel.add(createLabeledTextField("Edad:", labelFont, textFieldFont, "txtEdad"));
+        datosPanel.add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont, "txtPeso"));
+        datosPanel.add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont, "txtAltura"));
 
         lblResultado = createResultLabel();
+
+        JPanel panelBotones = new JPanel(new GridLayout(1, 3, 10, 10));
 
         btnCalcular = createStyledButton("Calcular IMC", new Color(0, 128, 0), e -> calcularIMC());
         btnGuardar = createStyledButton("Guardar Datos", new Color(0, 0, 128), e -> guardarDatos());
         btnHistorial = createStyledButton("Ver Historial", new Color(64, 0, 64), e -> verHistorial());
 
-        add(btnCalcular);
-        add(lblResultado);
-        add(btnGuardar);
-        add(btnHistorial);
+        panelBotones.add(btnCalcular);
+        panelBotones.add(lblResultado);
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnHistorial);
 
         panelGrafico = new JPanel();
-        add(panelGrafico);
         graficoComparativo = new GraficoComparativo(this);
-        graficoComparativo.setVisible(false);
+        panelGrafico.add(graficoComparativo, BorderLayout.CENTER);
+
+        add(datosPanel, BorderLayout.NORTH);
+        add(panelBotones, BorderLayout.CENTER);
+        add(panelGrafico, BorderLayout.SOUTH);
 
     }
 
@@ -201,6 +210,10 @@ public class GUI extends JFrame {
 
     double getTxtPesoValue() {
         try {
+            String pesoTex = txtPeso.getText().trim();
+            if (pesoTex.isEmpty()) {
+                throw new NumberFormatException("El campo de texto está vacío.");
+            }
             return Double.parseDouble(txtPeso.getText());
 
         } catch (NumberFormatException e) {
@@ -211,6 +224,10 @@ public class GUI extends JFrame {
 
     public double getTxtAlturaValue() {
         try {
+            String alturaText = txtAltura.getText().trim();
+            if (alturaText.isEmpty()) {
+                throw new NumberFormatException("El campo de texto está vacío.");
+            }
             return Double.parseDouble(txtAltura.getText());
         } catch (NumberFormatException e) {
             e.printStackTrace();
