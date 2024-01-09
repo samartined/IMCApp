@@ -173,7 +173,7 @@ public class GUI extends JFrame {
         List<MedicionIMC> historial = Calculadora.obtenerHistorial();
 
         // Actualizar el historial y recalcular el gráfico
-        graficoComparativo.actualizarHistorial(historial);
+        graficoComparativo.representacionDatos(historial);
 
         // Mostrar u ocultar el gráfico según sea necesario
         graficoComparativo.setVisible(!graficoComparativo.isVisible());
