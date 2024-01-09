@@ -1,5 +1,6 @@
 package com.imcapp.gui.guiprincipal;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -29,23 +30,27 @@ public class GUI extends JFrame {
     JTextField txtAltura;
     private JLabel lblResultado;
     private JButton btnCalcular, btnGuardar, btnHistorial;
-    private JPanel panelGrafico;
     private GraficoComparativo graficoComparativo;
+    private JPanel panelGrafico;
 
     public GUI() {
         setTitle("Calculadora de IMC");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLayout(new GridLayout(7, 2, 10, 10));
-        getContentPane().setBackground(Color.WHITE);
+
+        // Panel superior con los campos de texto y botones para calcular y guardar
+        JPanel panelSuperior = new JPanel(new GridLayout(7, 2, 10, 10));
+        panelSuperior.setBackground(Color.WHITE);
+
+        panelSuperior.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
 
         Font labelFont = new Font("Arial", Font.BOLD, 20);
         Font textFieldFont = new Font("Helvetica", Font.BOLD, 20);
 
-        add(createLabeledTextField("Nombre:", labelFont, textFieldFont, "txtNombre"));
-        add(createLabeledTextField("Edad:", labelFont, textFieldFont, "txtEdad"));
-        add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont, "txtPeso"));
-        add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont, "txtAltura"));
+        panelSuperior.add(createLabeledTextField("Nombre:", labelFont, textFieldFont, "txtNombre"));
+        panelSuperior.add(createLabeledTextField("Edad:", labelFont, textFieldFont, "txtEdad"));
+        panelSuperior.add(createLabeledTextField("Peso (Kg):", labelFont, textFieldFont, "txtPeso"));
+        panelSuperior.add(createLabeledTextField("Altura (en metros):", labelFont, textFieldFont, "txtAltura"));
 
         lblResultado = createResultLabel();
 
@@ -53,15 +58,25 @@ public class GUI extends JFrame {
         btnGuardar = createStyledButton("Guardar Datos", new Color(0, 0, 128), e -> guardarDatos());
         btnHistorial = createStyledButton("Ver Historial", new Color(64, 0, 64), e -> verHistorial());
 
-        add(btnCalcular);
-        add(lblResultado);
-        add(btnGuardar);
-        add(btnHistorial);
+        panelSuperior.add(btnCalcular);
+        panelSuperior.add(lblResultado);
+        panelSuperior.add(btnGuardar);
+        panelSuperior.add(btnHistorial);
+
+        // Crear el panel para la mitad inferior con el gráfico comparativo
+        JPanel panelInferior = new JPanel(new BorderLayout());
+        panelInferior.setBackground(Color.WHITE);
 
         panelGrafico = new JPanel();
-        add(panelGrafico);
+        panelInferior.add(panelGrafico, BorderLayout.CENTER);
         graficoComparativo = new GraficoComparativo(this);
         graficoComparativo.setVisible(false);
+        panelGrafico.add(graficoComparativo);
+
+        // Usar BorderLayout para organizar los dos paneles en el JFrame
+        setLayout(new BorderLayout());
+        add(panelSuperior, BorderLayout.CENTER);
+        add(panelInferior, BorderLayout.SOUTH);
 
     }
 
