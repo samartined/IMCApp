@@ -1,0 +1,21 @@
+
+
+Version:	3.50
+CmdLine:	C:\Users\Edgar\Documents\DAM\UNIVERSAE\Desarrollo de Interfaces\Ejercicio\ejercicios\imcapp\imcapp.exe --l4j-debug
+JNI:		No
+WOW64:		Yes
+Working dir:	C:\Users\Edgar\Documents\DAM\UNIVERSAE\Desarrollo de Interfaces\Ejercicio\ejercicios\imcapp\.
+Requires JDK:	No
+Requires 64-Bit: No
+Java min ver:	
+Java max ver:	
+Substitute:	JAVA_HOME = 
+Substitute:	PATH = C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\AutoFirma\AutoFirma;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\Edgar\flutter\bin;C:\Program Files\Calibre2\;C:\Program Files\PowerShell\7\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Python\Python 3.11.4\Scripts\;C:\Python\Python 3.11.4\;C:\Python\Python311\Scripts\;C:\Python\Python311\;C:\Users\Edgar\AppData\Local\Microsoft\WindowsApps;C:\Users\Edgar\spicetify-cli;C:\Microsoft VS Code\bin;C:\Windows\System32\sqlite\sqlite-tools-win32-x86-3420000;C:\Program Files\Git\bin;C:\Users\Edgar\Documents\flutter\bin;C:\Program Files\Git\cmd;C:\Users\Edgar\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin
+JRE paths:	;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\dotnet\;C:\Program Files\AutoFirma\AutoFirma;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\dotnet\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Users\Edgar\flutter\bin;C:\Program Files\Calibre2\;C:\Program Files\PowerShell\7\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Python\Python 3.11.4\Scripts\;C:\Python\Python 3.11.4\;C:\Python\Python311\Scripts\;C:\Python\Python311\;C:\Users\Edgar\AppData\Local\Microsoft\WindowsApps;C:\Users\Edgar\spicetify-cli;C:\Microsoft VS Code\bin;C:\Windows\System32\sqlite\sqlite-tools-win32-x86-3420000;C:\Program Files\Git\bin;C:\Users\Edgar\Documents\flutter\bin;C:\Program Files\Git\cmd;C:\Users\Edgar\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin
+Check launcher:	C:\Program Files\Common Files\Oracle\Java\javapath\bin\javaw.exe (not found)
+Check launcher:	C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin\javaw.exe (OK)
+Version string: 1.017.000_008 / 64-Bit (OK)
+Launcher:	C:\Program Files\Eclipse Adoptium\jdk-17.0.8.7-hotspot\bin\javaw.exe
+Launcher args:	-jar "C:\Users\Edgar\Documents\DAM\UNIVERSAE\Desarrollo de Interfaces\Ejercicio\ejercicios\imcapp\imcapp.exe"
+Args length:	109/32768 chars
+Exit code:	0
